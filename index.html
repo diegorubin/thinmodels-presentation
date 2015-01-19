@@ -210,9 +210,56 @@ end
           </section>
           <section>
             <h2>Nosso Modelo</h2>
+            <pre><code data-trim contenteditable>
+class Person < ActiveRecord::Base
+
+  after_create :notify_admins
+  
+  private
+  def notify_admins
+    admins = Person.where(role: 0)
+    admins.each do |admin|
+      Message.create({
+        about: 'Nova pessoa',
+        body: 'Uma nova pessoa foi cadastrada',
+        person: admin
+      })
+    end
+  end
+
+end
+            </code></pre>
           </section>
           <section>
             <h2>Como poderiamos fazer</h2>
+            <pre><code data-trim contenteditable>
+class NotifyAdmins
+
+  def initialize(person)
+    @person = person
+  end
+
+  def notify_admins
+    admins = Person.where(role: 0)
+    admins.each do |admin|
+      Message.create({
+        about: 'Nova pessoa',
+        body: "Diga olá para #{@person.first_name}.",
+        person: admin
+      })
+    end
+  end
+  
+end
+            </code></pre>
+          </section>
+          <section>
+            <h2>Como poderiamos fazer</h2>
+            <p>Utilizando a nova classe</p>
+            <pre><code data-trim contenteditable>
+                person.save
+NotifyAdmins.new(person).notify_admins
+            </code></pre>
           </section>
         </section>
 
