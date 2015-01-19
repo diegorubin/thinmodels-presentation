@@ -145,13 +145,60 @@ end
         <section>
           <section>
             <h2>Decorators</h2>
+            <p>
+              Classes responsáveis por manter as lógicas para formatar
+              atributos do modelo.
+            </p>
+            <p>
+              O projeto Hermes utiliza a gem <a target="_blank"
+                  href="https://github.com/drapergem/draper">Draper</a> para
+              facilitar a criação de decorators.
+            </p>
           </section>
           <section>
             <h2>Nosso Modelo</h2>
+            <pre><code data-trim contenteditable>
+class Person < ActiveRecord::Base
+  
+  # formatacoes
+  def complete_name
+    [first_name, last_name].join(' ')
+  end
+
+  def birthday_str
+    I18n.t(birthday, :short)
+  end
+
+end
+            </code></pre>
+
           </section>
           <section>
             <h2>Como poderiamos fazer</h2>
+            <p>Decorator</p>
+            <pre><code data-trim contenteditable>
+class PersonDecorator < SimpleDelegator
+
+  def complete_name
+    [first_name, last_name].join(' ')
+  end
+
+  def birthday_str
+    I18n.l(birthday, format: :short)
+  end
+
+end
+            </code></pre>
           </section>
+          <section>
+            <h2>Como poderiamos fazer</h2>
+            <p>Uso</p>
+            <pre><code data-trim contenteditable>
+@person = Person.first
+@person_decorator = PersonDecorator.new(@person)
+            </code></pre>
+          </section>
+
         </section>
 
         <section>
